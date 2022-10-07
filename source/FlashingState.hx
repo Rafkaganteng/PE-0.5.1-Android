@@ -10,6 +10,7 @@ import lime.app.Application;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
+import flixel.util.FlxSave;
 
 class FlashingState extends MusicBeatState
 {
@@ -24,48 +25,45 @@ class FlashingState extends MusicBeatState
 		add(bg);
 
 		warnText = new FlxText(0, 0, FlxG.width,
-			"Hey, watch out!\n
-			This Mod contains some flashing lights!\n
-			Press ENTER to disable them now or go to Options Menu.\n
-			Press ESCAPE to ignore this message.\n
-			You've been warned!",
+			"Hey there person man/woman   \n
+			Some songs contains some flashing and it may cause a headache,\n
+			Press Esc if you want to disable it or press Enter if you don't wanna disable it,\n
+			\n
+			Hope you enjoy this mod.",
 			32);
 		warnText.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER);
 		warnText.screenCenter(Y);
 		add(warnText);
-
-                #if android
-		addVirtualPad(NONE, A_B);
-		#end
 	}
 
 	override function update(elapsed:Float)
 	{
-		if(!leftState) {
-			var back:Bool = controls.BACK;
-			if (controls.ACCEPT || back) {
-				leftState = true;
-				FlxTransitionableState.skipNextTransIn = true;
-				FlxTransitionableState.skipNextTransOut = true;
-				if(!back) {
-					ClientPrefs.flashing = false;
-					ClientPrefs.saveSettings();
-					FlxG.sound.play(Paths.sound('confirmMenu'));
-					FlxFlicker.flicker(warnText, 1, 0.1, false, true, function(flk:FlxFlicker) {
-						new FlxTimer().start(0.5, function (tmr:FlxTimer) {
-							MusicBeatState.switchState(new TitleState());
-						});
-					});
-				} else {
-					FlxG.sound.play(Paths.sound('cancelMenu'));
-					FlxTween.tween(warnText, {alpha: 0}, 1, {
-						onComplete: function (twn:FlxTween) {
-							MusicBeatState.switchState(new TitleState());
-						}
-					});
-				}
-			}
+		if (FlxG.keys.justPressed.ENTER) {
+			var save:FlxSave = new FlxSave();
+			save.bind('avfnf', 'ninjamuffin99');
+			save.data.flashinglol = true;
+			save.flush();
+			FlxG.log.add("Settings saved!");
+            FlxG.switchState(new TitleState());
+			ClientPrefs.flashing = true;
+			ClientPrefs.saveSettings();
+			FlxG.sound.play(Paths.sound('cancelMenu'));
+            FlxTween.tween(warnText, {alpha: 0}, 1, {
+            });
+		} else if (FlxG.keys.justPressed.ESCAPE) {
+			var save:FlxSave = new FlxSave();
+			save.bind('avfnf', 'ninjamuffin99');
+			save.data.flashinglol = true;
+			save.flush();
+			FlxG.log.add("Settings saved!");
+            FlxG.switchState(new TitleState());
+			ClientPrefs.flashing = false;
+			ClientPrefs.saveSettings();
+            FlxG.sound.play(Paths.sound('cancelMenu'));
+            FlxTween.tween(warnText, {alpha: 0}, 1, {
+            });
 		}
+
 		super.update(elapsed);
-	}
+   }
 }

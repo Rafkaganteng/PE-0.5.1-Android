@@ -87,7 +87,7 @@ class ModsMenuState extends MusicBeatState
 		noModsTxt.screenCenter();
 		visibleWhenNoMods.push(noModsTxt);
 
-		var path:String = Main.getDataPath() + 'modsList.txt';
+		var path:String = 'modsList.txt';
 		if(FileSystem.exists(path))
 		{
 			var leMods:Array<String> = CoolUtil.coolTextFile(path);
@@ -106,12 +106,12 @@ class ModsMenuState extends MusicBeatState
 
 		// FIND MOD FOLDERS
 		var boolshit = true;
-		if (FileSystem.exists(Main.getDataPath() + "modsList.txt")){
+		if (FileSystem.exists("modsList.txt")){
 			for (folder in Paths.getModDirectories())
 			{
 				if(!Paths.ignoreModFolders.contains(folder))
 				{
-					addToModsList([folder, false]);//i like it false by default. 
+					addToModsList([folder, true]);
 				}
 			}
 		}
@@ -315,8 +315,7 @@ class ModsMenuState extends MusicBeatState
 			if(loadedIcon != null)
 			{
 				newMod.icon.loadGraphic(loadedIcon, true, 150, 150);//animated icon support
-				var totalFrames = Math.floor(loadedIcon.width / 150) * Math.floor(loadedIcon.height / 150);
-				newMod.icon.animation.add("icon", [for (i in 0...totalFrames) i],10);
+				newMod.icon.animation.add("icon", getIntArray(Math.floor(loadedIcon.width / 150)),24);
 				newMod.icon.animation.play("icon");
 			}
 			else
@@ -342,10 +341,6 @@ class ModsMenuState extends MusicBeatState
 		updatePosition();
 
 		FlxG.mouse.visible = true;
-
-                #if android
-		addVirtualPad(UP_DOWN, B);
-		#end
 
 		super.create();
 	}
@@ -422,7 +417,7 @@ class ModsMenuState extends MusicBeatState
 			fileStr += values[0] + '|' + (values[1] ? '1' : '0');
 		}
 
-		var path:String = Main.getDataPath() + 'modsList.txt';
+		var path:String = 'modsList.txt';
 		File.saveContent(path, fileStr);
 	}
 

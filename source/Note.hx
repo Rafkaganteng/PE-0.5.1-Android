@@ -35,7 +35,6 @@ class Note extends FlxSprite
 
 	public var colorSwap:ColorSwap;
 	public var inEditor:Bool = false;
-	public var gfNote:Bool = false;
 	private var earlyHitMult:Float = 0.5;
 
 	public static var swagWidth:Float = 160 * 0.7;
@@ -88,21 +87,46 @@ class Note extends FlxSprite
 			switch(value) {
 				case 'Hurt Note':
 					ignoreNote = mustPress;
-					reloadNote('HURT');
+					if(PlayState.SONG.song == 'dud') {
+						reloadNote('dud');
+					} else {
+						reloadNote('HURT');
+					}
 					noteSplashTexture = 'HURTnoteSplashes';
 					colorSwap.hue = 0;
 					colorSwap.saturation = 0;
 					colorSwap.brightness = 0;
-					if(isSustainNote) {
-						missHealth = 0.1;
+					if(PlayState.SONG.song == 'dud') {
+						missHealth = 2;
 					} else {
-						missHealth = 0.3;
+						if(isSustainNote) {
+							missHealth = 0.1;
+						} else {
+							missHealth = 0.3;
+						}
 					}
 					hitCausesMiss = true;
+				case 'Red Band Sing HIT 1' | 'Red Band Sing HIT 2' | 'Green Band Sing HIT 1' | 'Green Band Sing HIT 2' | 'Blue Band Sing HIT 1' | 'Blue Band Sing HIT 2' | 'Red and Blue Band Sing HIT 1' | 'Red and Green Band Sing HIT 1' | 'Green and Blue Band Sing HIT 1' | 'Red and Blue Band Sing HIT 2' | 'Red and Green Band Sing HIT 2' | 'Green and Blue Band Sing HIT 2':
+					//visible = false;
 				case 'No Animation':
 					noAnimation = true;
-				case 'GF Sing':
-					gfNote = true;
+				case 'Glitch Note':
+                    ignoreNote = true;
+                    reloadNote('GLITCH');
+                    noteSplashTexture = 'HURTnoteSplashes';
+                    colorSwap.hue = 0;
+                    colorSwap.saturation = 0;
+                    colorSwap.brightness = 0;
+
+                    hitCausesMiss = true;
+				case 'Fake Note':
+					ignoreNote = mustPress;
+					reloadNote('DELETED');
+					noteSplashTexture = 'HURTnoteSplashes';
+					colorSwap.hue = 0;
+					colorSwap.saturation = 0;
+					colorSwap.brightness = 0;
+					hitCausesMiss = false;
 			}
 			noteType = value;
 		}

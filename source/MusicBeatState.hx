@@ -13,10 +13,8 @@ import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
 import flixel.FlxState;
 import flixel.FlxBasic;
-#if android
-import flixel.input.actions.FlxActionInput;
-import ui.FlxVirtualPad;
-#end
+import flixel.addons.transition.TransitionData;
+import flixel.math.FlxPoint;
 
 class MusicBeatState extends FlxUIState
 {
@@ -25,42 +23,18 @@ class MusicBeatState extends FlxUIState
 
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
+
 	private var controls(get, never):Controls;
 
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
 
-	#if android
-	var _virtualpad:FlxVirtualPad;
-	var trackedinputsUI:Array<FlxActionInput> = [];
-	var trackedinputsNOTES:Array<FlxActionInput> = [];
-	
-	public function addVirtualPad(?DPad:FlxDPadMode, ?Action:FlxActionMode) {
-		_virtualpad = new FlxVirtualPad(DPad, Action);
-		_virtualpad.alpha = 0.75;
-		add(_virtualpad);
-		controls.setVirtualPadUI(_virtualpad, DPad, Action);
-		trackedinputsUI = controls.trackedinputsUI;
-		controls.trackedinputsUI = [];
-	}
-	
-	override function destroy() {
-		controls.removeFlxInput(trackedinputsUI);
-		controls.removeFlxInput(trackedinputsNOTES);		
-		
-		super.destroy();
-	}
-	#else
-	public function addVirtualPad(?DPad, ?Action){};
-	#end	
-
 	override function create() {
 		var skip:Bool = FlxTransitionableState.skipNextTransOut;
 		super.create();
 
-		// Custom made Trans out
 		if(!skip) {
-			openSubState(new CustomFadeTransition(1, true));
+			FlxTransitionableState.defaultTransOut = new TransitionData(TILES, FlxColor.BLACK, 1, new FlxPoint(0, 1), new FlxRect( -500, -300, FlxG.width * 1.8, FlxG.height * 1.8));
 		}
 		FlxTransitionableState.skipNextTransOut = false;
 	}
@@ -89,6 +63,8 @@ class MusicBeatState extends FlxUIState
 
 		if (oldStep != curStep && curStep > 0)
 			stepHit();
+
+		if(FlxG.save.data != null) FlxG.save.data.fullscreen = FlxG.fullscreen;
 
 		super.update(elapsed);
 	}
@@ -119,16 +95,13 @@ class MusicBeatState extends FlxUIState
 		var curState:Dynamic = FlxG.state;
 		var leState:MusicBeatState = curState;
 		if(!FlxTransitionableState.skipNextTransIn) {
-			leState.openSubState(new CustomFadeTransition(0.7, false));
+			FlxTransitionableState.defaultTransIn = new TransitionData(TILES, FlxColor.BLACK, 1, new FlxPoint(0, 1), new FlxRect( -500, -300, FlxG.width * 1.8, FlxG.height * 1.8));
 			if(nextState == FlxG.state) {
-				CustomFadeTransition.finishCallback = function() {
 					FlxG.resetState();
-				};
 				//trace('resetted');
 			} else {
-				CustomFadeTransition.finishCallback = function() {
+				FlxTransitionableState.defaultTransIn = new TransitionData(TILES, FlxColor.BLACK, 1, new FlxPoint(0, 1), new FlxRect( -500, -300, FlxG.width * 1.8, FlxG.height * 1.8));
 					FlxG.switchState(nextState);
-				};
 				//trace('changed state');
 			}
 			return;

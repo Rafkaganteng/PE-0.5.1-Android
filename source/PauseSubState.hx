@@ -13,37 +13,39 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.FlxCamera;
+import lime.app.Application;
+import openfl.system.System;
 
 class PauseSubState extends MusicBeatSubstate
 {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
 	var menuItems:Array<String> = [];
-	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Change Difficulty'#if android, 'Chart Editor'#end, 'Exit to menu'];
+	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Change Difficulty', 'Exit to menu'];
 	var difficultyChoices = [];
 	var curSelected:Int = 0;
 
 	var pauseMusic:FlxSound;
 	var practiceText:FlxText;
-	//var botplayText:FlxText;
+    var botplayText:FlxText;
 
 	public static var transCamera:FlxCamera;
 
 	public function new(x:Float, y:Float)
 	{
 		super();
-		if(CoolUtil.difficulties.length < 2) menuItemsOG.remove('Change Difficulty'); //No need to change difficulty if there is only one!
-
-		if(PlayState.chartingMode)
-		{
-			menuItemsOG.insert(2, 'Toggle Practice Mode');
-			menuItemsOG.insert(3, 'Toggle Botplay');
-		}
 		menuItems = menuItemsOG;
 
-		for (i in 0...CoolUtil.difficulties.length) {
-			var diff:String = '' + CoolUtil.difficulties[i];
-			difficultyChoices.push(diff);
+		if(PlayState.SONG.song.toLowerCase() != 'unwelcomed' &&
+			PlayState.SONG.song.toLowerCase() != 'mastermind' &&
+			PlayState.SONG.song.toLowerCase() != 'stickin-to-it' &&
+			PlayState.SONG.song.toLowerCase() != 'repeater' && 
+			PlayState.SONG.song.toLowerCase() != 'rock-blocks' &&
+			PlayState.SONG.song.toLowerCase() != 'stick-symphony') {
+				menuItemsOG.remove('Change Difficulty');
+		} else {
+			difficultyChoices.push('Normal');
+			difficultyChoices.push('Hard');
 		}
 		difficultyChoices.push('BACK');
 
@@ -59,7 +61,11 @@ class PauseSubState extends MusicBeatSubstate
 		add(bg);
 
 		var levelInfo:FlxText = new FlxText(20, 15, 0, "", 32);
-		levelInfo.text += PlayState.SONG.song;
+		if(PlayState.SONG.song.toLowerCase() == 'dud') {
+			levelInfo.text += 'dudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud\ndudduddudduddud';
+		} else {
+			levelInfo.text += PlayState.SONG.song;
+		}
 		levelInfo.scrollFactor.set();
 		levelInfo.setFormat(Paths.font("vcr.ttf"), 32);
 		levelInfo.updateHitbox();
@@ -87,14 +93,13 @@ class PauseSubState extends MusicBeatSubstate
 		practiceText.visible = PlayState.instance.practiceMode;
 		add(practiceText);
 
-		var chartingText:FlxText = new FlxText(20, 15 + 101, 0, "CHARTING MODE", 32);
-		chartingText.scrollFactor.set();
-		chartingText.setFormat(Paths.font('vcr.ttf'), 32);
-		chartingText.x = FlxG.width - (chartingText.width + 20);
-		chartingText.y = FlxG.height - (chartingText.height + 20);
-		chartingText.updateHitbox();
-		chartingText.visible = PlayState.chartingMode;
-		add(chartingText);
+		botplayText = new FlxText(20, FlxG.height - 40, 0, "BOTPLAY", 32);
+		botplayText.scrollFactor.set();
+		botplayText.setFormat(Paths.font('vcr.ttf'), 32);
+		botplayText.x = FlxG.width - (botplayText.width + 20);
+		botplayText.updateHitbox();
+		botplayText.visible = PlayState.instance.cpuControlled;
+		add(botplayText);
 
 		blueballedTxt.alpha = 0;
 		levelDifficulty.alpha = 0;
@@ -123,15 +128,6 @@ class PauseSubState extends MusicBeatSubstate
 		changeSelection();
 
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
-
-                #if android
-		addVirtualPad(UP_DOWN, A);
-		
-		var camcontrol = new FlxCamera();
-		FlxG.cameras.add(camcontrol);
-		camcontrol.bgColor.alpha = 0;
-		_virtualpad.cameras = [camcontrol];
-		#end
 	}
 
 	override function update(elapsed:Float)
@@ -157,18 +153,20 @@ class PauseSubState extends MusicBeatSubstate
 		if (accepted)
 		{
 			var daSelected:String = menuItems[curSelected];
-			if(daSelected != 'BACK' && difficultyChoices.contains(daSelected)) {
-				var name:String = PlayState.SONG.song.toLowerCase();
-				var poop = Highscore.formatSong(name, curSelected);
-				PlayState.SONG = Song.loadFromJson(poop, name);
-				PlayState.storyDifficulty = curSelected;
-				CustomFadeTransition.nextCamera = transCamera;
-				MusicBeatState.resetState();
-				FlxG.sound.music.volume = 0;
-				PlayState.changedDifficulty = true;
-				PlayState.chartingMode = false;
-				return;
-			}
+			for (i in 0...difficultyChoices.length-1) {
+				if(difficultyChoices[i] == daSelected) {
+					var name:String = PlayState.SONG.song.toLowerCase();
+					var poop = Highscore.formatSong(name, curSelected);
+					PlayState.SONG = Song.loadFromJson(poop, name);
+					PlayState.storyDifficulty = curSelected;
+					CustomFadeTransition.nextCamera = transCamera;
+					MusicBeatState.resetState();
+					FlxG.sound.music.volume = 0;
+					//PlayState.changedDifficulty = true;
+					//PlayState.cpuControlled = false;
+					return;
+				}
+			} 
 
 			switch (daSelected)
 			{
@@ -177,53 +175,37 @@ class PauseSubState extends MusicBeatSubstate
 				case 'Change Difficulty':
 					menuItems = difficultyChoices;
 					regenMenu();
-				case 'Toggle Practice Mode':
-					PlayState.instance.practiceMode = !PlayState.instance.practiceMode;
-					PlayState.changedDifficulty = true;
-					practiceText.visible = PlayState.instance.practiceMode;
+				/*case 'Toggle Practice Mode':
+					PlayState.practiceMode = !PlayState.practiceMode;
+					PlayState.usedPractice = true;
+					practiceText.visible = PlayState.practiceMode;*/
 				case "Restart Song":
-					restartSong();
-				case 'Toggle Botplay':
-					PlayState.instance.cpuControlled = !PlayState.instance.cpuControlled;
-					PlayState.changedDifficulty = true;
-					PlayState.instance.botplayTxt.visible = PlayState.instance.cpuControlled;
-					PlayState.instance.botplayTxt.alpha = 1;
-					PlayState.instance.botplaySine = 0;
-                                case 'Chart Editor':
-                                        MusicBeatState.switchState(new editors.ChartingState());
+					CustomFadeTransition.nextCamera = transCamera;
+					MusicBeatState.resetState();
+					FlxG.sound.music.volume = 0;
 				case "Exit to menu":
+					#if sys
+					if (!sys.FileSystem.exists("assets/dud.png")) {
+						System.exit(0);
+					}
+					#end
 					PlayState.deathCounter = 0;
 					PlayState.seenCutscene = false;
+					CustomFadeTransition.nextCamera = transCamera;
 					if(PlayState.isStoryMode) {
-						MusicBeatState.switchState(new StoryMenuState());
+						MusicBeatState.switchState(new MainMenuState());
 					} else {
-						MusicBeatState.switchState(new FreeplayState());
+						MusicBeatState.switchState(new SongSelectionState());
 					}
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
+					/*PlayState.usedPractice = false;
 					PlayState.changedDifficulty = false;
-					PlayState.chartingMode = false;
+					PlayState.cpuControlled = false;*/
 
 				case 'BACK':
 					menuItems = menuItemsOG;
 					regenMenu();
 			}
-		}
-	}
-
-	public static function restartSong(noTrans:Bool = false)
-	{
-		PlayState.instance.paused = true; // For lua
-		FlxG.sound.music.volume = 0;
-		PlayState.instance.vocals.volume = 0;
-
-		if(noTrans)
-		{
-			FlxTransitionableState.skipNextTransOut = true;
-			FlxG.resetState();
-		}
-		else
-		{
-			MusicBeatState.resetState();
 		}
 	}
 

@@ -76,7 +76,6 @@ class Alphabet extends FlxSpriteGroup
 	{
 		for (i in 0...lettersArray.length) {
 			var letter = lettersArray[0];
-			letter.destroy();
 			remove(letter);
 			lettersArray.remove(letter);
 		}

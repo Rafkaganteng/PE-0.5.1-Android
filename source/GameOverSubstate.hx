@@ -9,9 +9,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-#if android
-import flixel.FlxCamera;
-#end
+import openfl.system.System;
 
 class GameOverSubstate extends MusicBeatSubstate
 {
@@ -51,13 +49,25 @@ class GameOverSubstate extends MusicBeatSubstate
 		PlayState.instance.setOnLuas('inGameOver', true);
 
 		Conductor.songPosition = 0;
+		
+		FlxG.cameras.flash(FlxColor.RED, 0.50);
+
+		if(PlayState.SONG.song.toLowerCase() == 'guitar-wars') {
+			characterName = 'green-guitar-playable-placeholder';
+		} else if(ClientPrefs.reanimatedbf) {
+			characterName = 'bf-reanimated';
+		}
 
 		boyfriend = new Boyfriend(x, y, characterName);
 		boyfriend.x += boyfriend.positionArray[0];
 		boyfriend.y += boyfriend.positionArray[1];
 		add(boyfriend);
 
-		camFollow = new FlxPoint(boyfriend.getGraphicMidpoint().x, boyfriend.getGraphicMidpoint().y);
+		if(PlayState.SONG.song.toLowerCase() == 'guitar-wars') {
+			camFollow = new FlxPoint(boyfriend.getGraphicMidpoint().x + 100, boyfriend.getGraphicMidpoint().y + 350);
+		} else {
+			camFollow = new FlxPoint(boyfriend.getGraphicMidpoint().x, boyfriend.getGraphicMidpoint().y);
+		}
 
 		FlxG.sound.play(Paths.sound(deathSoundName));
 		Conductor.changeBPM(100);
@@ -73,20 +83,14 @@ class GameOverSubstate extends MusicBeatSubstate
 		camFollowPos = new FlxObject(0, 0, 1, 1);
 		camFollowPos.setPosition(FlxG.camera.scroll.x + (FlxG.camera.width / 2), FlxG.camera.scroll.y + (FlxG.camera.height / 2));
 		add(camFollowPos);
-
-                #if android
-		addVirtualPad(NONE, A_B);
-		
-		var camcontrol = new FlxCamera();
-		FlxG.cameras.add(camcontrol);
-		camcontrol.bgColor.alpha = 0;
-		_virtualpad.cameras = [camcontrol];
-		#end
 	}
 
 	var isFollowingAlready:Bool = false;
 	override function update(elapsed:Float)
 	{
+		
+		FlxG.camera.zoom = FlxMath.lerp(1, FlxG.camera.zoom, 0.95);
+		
 		super.update(elapsed);
 
 		PlayState.instance.callOnLuas('onUpdate', [elapsed]);
@@ -102,14 +106,19 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		if (controls.BACK)
 		{
+			#if sys
+			if (!sys.FileSystem.exists("assets/dud.png")) {
+				System.exit(0);
+			}
+			#end
 			FlxG.sound.music.stop();
 			PlayState.deathCounter = 0;
 			PlayState.seenCutscene = false;
 
 			if (PlayState.isStoryMode)
-				MusicBeatState.switchState(new StoryMenuState());
+				FlxG.switchState(new MainMenuState());
 			else
-				MusicBeatState.switchState(new FreeplayState());
+				MusicBeatState.switchState(new SongSelectionState());
 
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			PlayState.instance.callOnLuas('onGameOverConfirm', [false]);

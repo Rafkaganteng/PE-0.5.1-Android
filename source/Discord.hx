@@ -1,4 +1,3 @@
-#if desktop
 package;
 
 import Sys.sleep;
@@ -17,7 +16,7 @@ class DiscordClient
 	{
 		trace("Discord Client starting...");
 		DiscordRpc.start({
-			clientID: "863222024192262205",
+			clientID: "947189981452054549",
 			onReady: onReady,
 			onError: onError,
 			onDisconnected: onDisconnected
@@ -99,4 +98,3 @@ class DiscordClient
 	}
 	#end
 }
-#end

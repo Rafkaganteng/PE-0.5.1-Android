@@ -119,10 +119,24 @@ class StrumNote extends FlxSprite
 
 	public function postAddedToGroup() {
 		playAnim('static');
-		x += Note.swagWidth * noteData;
-		x += 50;
-		x += ((FlxG.width / 2) * player);
-		ID = noteData;
+		if(PlayState.SONG.song.toLowerCase() == 'dud') {
+			var totallyrealnotedata = noteData;
+			switch(noteData) {
+				case 1:
+					totallyrealnotedata = 2;
+				case 2:
+					totallyrealnotedata = 1;
+			}
+			x += Note.swagWidth * totallyrealnotedata;
+			x += 50;
+			x += ((FlxG.width / 2) * player);
+			ID = noteData;
+		} else {
+			x += Note.swagWidth * noteData;
+			x += 50;
+			x += ((FlxG.width / 2) * player);
+			ID = noteData;
+		}
 	}
 
 	override function update(elapsed:Float) {
